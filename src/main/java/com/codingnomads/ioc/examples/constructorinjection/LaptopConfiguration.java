@@ -18,4 +18,7 @@ public class LaptopConfiguration {
     public OS os() {
         return new OS("ubuntu");
     }
+
+    @Bean
+    public Disk disk() { return new Disk("SSD", 16); }
 }

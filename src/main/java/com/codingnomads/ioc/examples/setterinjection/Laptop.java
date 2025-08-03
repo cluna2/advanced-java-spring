@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 public class Laptop {
     private Processor processor;
     private OS os;
+    private Disk disk;
 
     @Autowired
     public void setProcessor(Processor processor) {
@@ -18,6 +19,9 @@ public class Laptop {
     public void setOs(OS os) {
         this.os = os;
     }
+
+    @Autowired
+    public void setDisk(Disk disk) { this.disk = disk; }
 
     public String printLaptopConfiguration() {
         return "processor: " + processor.getCore() + " core " + processor.getName() + "\nOS: " + os.getName();
