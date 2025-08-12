@@ -36,6 +36,15 @@ public class Nomad {
     @Value("#{${database.values}}")
     private Map<String, String> databaseValues;
 
+    @Value("${nomad.address}")
+    private String address;
+
+    @Value("${nomad.chair}")
+    private String chair;
+
+    @Value("${nomad.monitor}")
+    private String monitor;
+
     public String nomadIdentity() {
         return name.concat(" ").concat(age.toString());
     }
@@ -60,4 +69,10 @@ public class Nomad {
     public Map<String, String> getDatabaseValues() {
         return databaseValues;
     }
+
+    public String getAddress() { return address; }
+
+    public String getChair() { return chair; }
+
+    public String getMonitor() { return monitor; }
 }

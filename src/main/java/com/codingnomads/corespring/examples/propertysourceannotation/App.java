@@ -19,4 +19,14 @@ public class App {
     public String getAppVersion() {
         return appVersion;
     }
+
+    @Value("${customapp.name}")
+    private String customName;
+
+    @Value("${customapp.version}")
+    private String customVersion;
+
+    public String getCustomName() { return customName; }
+
+    public String getCustomVersion() { return customVersion; }
 }

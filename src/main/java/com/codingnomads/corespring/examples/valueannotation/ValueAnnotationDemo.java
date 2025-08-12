@@ -17,6 +17,9 @@ public class ValueAnnotationDemo {
         nomad.getWorkingDays().forEach(System.out::println);
         System.out.println(nomad.getDatabaseValues());
         System.out.println(nomad.nomadIdentity());
+        System.out.println(nomad.getAddress());
+        System.out.println(nomad.getChair());
+        System.out.println(nomad.getMonitor());
         ctx.close();
     }
 }

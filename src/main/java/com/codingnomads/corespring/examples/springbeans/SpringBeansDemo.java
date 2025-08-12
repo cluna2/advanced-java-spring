@@ -12,5 +12,9 @@ public class SpringBeansDemo {
         System.out.println(
                 "Spring Developer Address: " + springDeveloper.getAddress().getStreetNumber() + " "
                         + springDeveloper.getAddress().getStreet());
+        System.out.println(
+                "Spring Developer Computer: " + springDeveloper.getComputer().getName() + " "
+                    + springDeveloper.getComputer().getProcessor()
+        );
     }
 }

@@ -11,4 +11,7 @@ public class BeanAnnotationConfig {
     public SampleBean sampleBean() {
         return new SampleBean();
     }
+
+    @Bean(name = "different_friendly_name")
+    public SampleBean myBean() { return new SampleBean(); }
 }

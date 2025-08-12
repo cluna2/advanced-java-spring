@@ -19,4 +19,9 @@
         <property name="version" value="17"/>
     </bean>
 
+    <bean id="chair" class="com.codingnomads.corespring.examples.application_context.xml.Chair">
+        <property name="name" value="Herman Miller"/>
+        <property name="reclinable" value="true"/>
+    </bean>
+
 </beans>

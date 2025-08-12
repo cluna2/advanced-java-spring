@@ -11,6 +11,8 @@ public class PropertySourceAnnotationDemo {
         final App app = ctx.getBean(App.class);
         System.out.println("Values from myapp.properties: " + "App Name: " + app.getAppName() + ", App Version: "
                 + app.getAppVersion());
+        System.out.println("Values from customapp.properties: " + "Custom name: " + app.getCustomName()
+            + " Custom App Version: " + app.getCustomVersion() );
         ctx.close();
     }
 }
