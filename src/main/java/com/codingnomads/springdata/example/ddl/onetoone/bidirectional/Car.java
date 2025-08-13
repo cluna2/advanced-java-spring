@@ -3,6 +3,7 @@ package com.codingnomads.springdata.example.ddl.onetoone.bidirectional;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.apache.ibatis.annotations.One;
 
 @Entity
 @Table(name = "cars")
@@ -27,4 +28,7 @@ public class Car {
             // to the field in the Driver class that defines the relationship
             mappedBy = "car")
     private Driver driver;
+
+    @OneToOne(mappedBy = "car")
+    private Technician technician;
 }
