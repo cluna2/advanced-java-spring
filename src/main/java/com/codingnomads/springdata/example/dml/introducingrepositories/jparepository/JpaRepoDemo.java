@@ -2,6 +2,8 @@
 package com.codingnomads.springdata.example.dml.introducingrepositories.jparepository;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -68,5 +70,34 @@ public class JpaRepoDemo implements CommandLineRunner {
 
         // delete all 3 soft drinks in a batch
         softDrinkRepo.deleteAllInBatch();
+
+        SoftDrink pibb = SoftDrink.builder().name("Mr.Pibb").rating(0).build();
+        SoftDrink sprite = SoftDrink.builder().name("Sprite").rating(9).build();
+        SoftDrink sevenUp = SoftDrink.builder().name("7Up").rating(3).build();
+
+        List<SoftDrink> myInsertedDrinks = softDrinkRepo.saveAll(List.of(pibb, sprite, sevenUp));
+
+        softDrinkRepo.flush();
+
+        // set all soft drinks just inserted to have a rating of 3
+        for (SoftDrink drink : myInsertedDrinks) {
+            drink.setRating(3);
+            softDrinkRepo.save(drink);
+        }
+
+        // get all soft drinks that have a rating of 3
+        List<SoftDrink> threeRatedDrinks = softDrinkRepo
+                .findAll(Example.of(
+                    SoftDrink.builder().rating(3).build(),
+                    ExampleMatcher.matchingAny()));
+
+        threeRatedDrinks.forEach(System.out::println);
+
+        // delete all soft drinks with a rating of 3
+        softDrinkRepo.deleteAllByIdInBatch(
+                threeRatedDrinks.stream()
+                        .map(drink -> drink.getId())
+                        .collect(Collectors.toList()));
+        System.out.println("Soft Drink table count: " + softDrinkRepo.count());
     }
 }
