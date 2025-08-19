@@ -1,10 +1,7 @@
 /* CodingNomads (C)2024 */
 package com.codingnomads.springdata.example.querydsl;
 
-import com.codingnomads.springdata.example.querydsl.models.Area;
-import com.codingnomads.springdata.example.querydsl.models.QArea;
-import com.codingnomads.springdata.example.querydsl.models.Route;
-import com.codingnomads.springdata.example.querydsl.models.SearchQuery;
+import com.codingnomads.springdata.example.querydsl.models.*;
 import com.codingnomads.springdata.example.querydsl.repository.AreaRepository;
 import com.codingnomads.springdata.example.querydsl.repository.RouteRepository;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -95,6 +92,28 @@ public class QueryDSLDemo implements CommandLineRunner {
         JPAQuery<?> query = new JPAQuery<>(entityManager);
         Area area = query.select(qArea).from(qArea).where(qArea.code.eq("A")).fetchOne();
         System.out.println(area);
+
+        query = new JPAQuery<>(entityManager);
+        Area bArea = query.select(qArea).from(qArea).where(qArea.code.eq("B")).fetchOne();
+        System.out.println("\n\n" + bArea + "\n\n");
+
+        query = new JPAQuery<>(entityManager);
+        List<Area> nonBAreas = query
+                .select(qArea)
+                .from(qArea)
+                .where(qArea.code.ne("B"))
+                .orderBy(qArea.code.asc())
+                .fetch();
+        nonBAreas.forEach(System.out::println);
+
+        QRoute qRoute = QRoute.route;
+        query = new JPAQuery<>(entityManager);
+        Route aToBRoute = query.select(qRoute).from(qRoute).where(qRoute.code.eq("A-B")).fetchOne();
+        System.out.println(aToBRoute);
+
+        query = new JPAQuery<>(entityManager);
+        List<Route> dOriginRoutes = query.select(qRoute).from(qRoute).where(qRoute.origin.code.eq("D")).fetch();
+        dOriginRoutes.forEach(System.out::println);
 
         routeRepository.deleteAll();
         areaRepository.deleteAll();
