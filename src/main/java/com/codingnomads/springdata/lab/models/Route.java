@@ -11,7 +11,6 @@ import lombok.*;
 @Getter
 @Setter
 @Table(name = "routes")
-@Builder
 @ToString
 public class Route implements Serializable {
 
@@ -34,4 +33,17 @@ public class Route implements Serializable {
             nullable = false,
             foreignKey = @ForeignKey(name = "fk_routes_destination_area_id"))
     private Area destination;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "network_id", nullable = false, foreignKey = @ForeignKey(name = "fk_network_area_id"))
+    private RouteNetwork routeNetwork;
+
+
+
+    @Builder
+    public Route(Area origin, Area destination) {
+        this.origin = origin;
+        this.destination = destination;
+        this.code = this.origin.getCode() + "-" + this.destination.getCode();
+    }
 }
