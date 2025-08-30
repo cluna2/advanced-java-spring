@@ -3,6 +3,8 @@ package com.codingnomads.springweb.resttemplate.GET.getForObject;
 
 import com.codingnomads.springweb.resttemplate.GET.models.QuoteTemplate;
 import java.util.Arrays;
+import java.util.Random;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -35,6 +37,14 @@ public class GetForObjectDemo {
             //
             //        System.out.println(response.toString());
 
+            int maxNumber = 10;
+            Integer randNum = new Random().nextInt(maxNumber) + 1;
+            ExcuseTemplate[] randomExcuse;
+            String url = String.format("https://excuser-three.vercel.app/v1/excuse/%s", randNum);
+            randomExcuse = restTemplate.getForObject(
+                    url, ExcuseTemplate[].class
+            );
+            System.out.println(Arrays.toString(randomExcuse));
         };
     }
 }
