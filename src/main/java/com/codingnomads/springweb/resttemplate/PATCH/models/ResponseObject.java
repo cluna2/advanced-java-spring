@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 public class ResponseObject {
-    Task data;
+    User data;
     Error error;
     String status;
 }
