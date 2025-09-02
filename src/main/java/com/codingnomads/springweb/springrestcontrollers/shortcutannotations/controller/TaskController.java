@@ -7,6 +7,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -38,11 +40,8 @@ public class TaskController {
 
         Optional<Task> taskToReturn = taskRepository.findById(id);
 
-        if (taskToReturn.isPresent()) {
-            return ResponseEntity.ok().body(taskToReturn.get());
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
+        return taskToReturn.map(task -> ResponseEntity.ok().body(task))
+                           .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
     }
 
     @GetMapping
@@ -57,5 +56,17 @@ public class TaskController {
         }
         taskRepository.deleteById(id);
         return ResponseEntity.ok().body(id);
+    }
+
+    @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Task> updateTask(@RequestBody Task task) {
+        if (task == null || !taskRepository.existsById(task.getId())) {
+            throw new IllegalStateException();
+        }
+
+
+        Task taskToUpdate = taskRepository.save(task);
+        return ResponseEntity.ok().body(taskToUpdate);
+
     }
 }
