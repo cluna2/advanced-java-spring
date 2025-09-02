@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.print.attribute.standard.Media;
+
 @RestController
 public class ConversionController {
 
@@ -25,5 +27,10 @@ public class ConversionController {
     @RequestMapping(path = "/normal", method = RequestMethod.GET)
     public String returnTheString() {
         return text;
+    }
+
+    @RequestMapping(path = "/backwards", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
+    public String returnBackwards() {
+        return new StringBuilder(text).reverse().toString();
     }
 }
