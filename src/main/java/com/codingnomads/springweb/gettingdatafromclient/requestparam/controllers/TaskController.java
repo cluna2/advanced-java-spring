@@ -43,4 +43,27 @@ public class TaskController {
                 .mapToObj(i -> Task.builder().id((long) i).name(names.get(i)).build())
                 .collect(Collectors.toList());
     }
+
+    @GetMapping(value = "/practice1")
+    public String endpoint1(@RequestParam(name = "number") Integer number) {
+        if (number == null) {
+            throw new IllegalStateException();
+        }
+        return "Number: " + number;
+    }
+
+
+    @GetMapping(value = "practice2")
+    public String endpoint2(@RequestParam(name = "number", required = false) Integer number) {
+        if (number == null) {
+            number = 1;
+        }
+        return "Number: " + number;
+    }
+
+    @GetMapping(value = "practice3")
+    public String endpoint3(@RequestParam(name = "number", required = false, defaultValue = "1") int number) {
+        return "Number: " + number;
+    }
+
 }
