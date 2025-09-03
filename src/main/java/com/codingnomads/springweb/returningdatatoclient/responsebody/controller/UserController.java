@@ -8,6 +8,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 @Controller
 public class UserController {
 
@@ -34,5 +38,16 @@ public class UserController {
     @GetMapping("/user")
     public User user() {
         return user;
+    }
+
+
+    @GetMapping("/user-list")
+    @ResponseBody
+    public List<User> userList() {
+        return Arrays.asList(
+                User.builder().id(1001).name("a").email("a@email.com").build(),
+                User.builder().id(1002).name("b").email("b@email.com").build(),
+                User.builder().id(1003).name("c").email("c@email.com").build()
+        );
     }
 }
