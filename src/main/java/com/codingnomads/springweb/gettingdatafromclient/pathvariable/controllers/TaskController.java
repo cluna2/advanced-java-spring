@@ -2,6 +2,8 @@
 package com.codingnomads.springweb.gettingdatafromclient.pathvariable.controllers;
 
 import com.codingnomads.springweb.gettingdatafromclient.pathvariable.models.Task;
+
+import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -48,5 +50,34 @@ public class TaskController {
     @GetMapping(value = "/path-variable-not-encoded/{name}", produces = MediaType.APPLICATION_JSON_VALUE)
     public String pathVariableIsNotEncoded(@PathVariable String name) {
         return name;
+    }
+
+
+    @GetMapping(value = "/path-test-not-optional/{var}", produces = MediaType.TEXT_PLAIN_VALUE)
+    public String pathTest(@PathVariable String var) {
+        return "Var: " + var;
+    }
+
+    @GetMapping({"/path-test/{optional}", "/path-test"})
+    public String optionalPath(@PathVariable(required = false) String optional) {
+        if (StringUtils.hasLength(optional)) {
+            return "Optional = " + optional;
+        } else {
+            return "Optional is not provided";
+        }
+    }
+
+    @GetMapping({"/map-test",
+        "/map-test/{key1}/{key2}",
+        "/map-test/{key1}"})
+    public Map<String, String> createMapTest(@PathVariable Map<String, String> pathMap) {
+        Map<String, String> nonEmptyMap = new HashMap<>();
+        for (Map.Entry<String, String> entry : pathMap.entrySet()) {
+            if (StringUtils.hasLength(entry.getValue())) {
+                nonEmptyMap.put(entry.getKey(), entry.getValue());
+            }
+        }
+
+        return nonEmptyMap;
     }
 }
