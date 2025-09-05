@@ -4,12 +4,17 @@ package com.codingnomads.springweb.gettingdatafromclient.handlingmultipartdata.c
 import com.codingnomads.springweb.gettingdatafromclient.handlingmultipartdata.models.DatabaseFile;
 import com.codingnomads.springweb.gettingdatafromclient.handlingmultipartdata.models.FileResponse;
 import com.codingnomads.springweb.gettingdatafromclient.handlingmultipartdata.repositories.DatabaseFileRepository;
+
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.NoSuchFileException;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import com.codingnomads.springweb.resttemplate.GET.getForObject.video_demo.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.data.domain.Example;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -68,6 +73,9 @@ public class HandleMultipartDataController {
             // wraps exception with custom message in a ResponseEntity to be returned to the user.
             return ResponseEntity.badRequest()
                     .body(new IllegalStateException("Sorry could not store file " + fileName + "Try again!", ex));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest()
+                    .body(new IllegalStateException("File could not be stored"));
         }
     }
 
@@ -148,5 +156,75 @@ public class HandleMultipartDataController {
         fileRepository.deleteById(fileId);
         return ResponseEntity.ok(
                 "File with ID " + fileId + " and name " + optional.get().getFileName() + " was deleted");
+    }
+
+
+    @GetMapping("/search")
+    public List<FileResponse> searchFilesByName(@RequestParam(name = "fileName") String fileName)  {
+
+        Example<DatabaseFile> exampleFile = Example.of(
+                DatabaseFile.builder()
+                        .fileName(fileName)
+                        .build());
+        List<DatabaseFile> databaseFiles = fileRepository.findAll(exampleFile);
+
+        if (databaseFiles.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        for (DatabaseFile file : databaseFiles) {
+            file.setDownloadUrl(ServletUriComponentsBuilder.fromCurrentContextPath()
+                                                                    .path("/images/")
+                                                                    .path(String.valueOf(file.getId()))
+                                                                    .toUriString());
+        }
+        return databaseFiles.stream()
+                .map(file ->
+                        FileResponse.builder()
+                            .fileName(file.getFileName())
+                            .fileDownloadUri(file.getDownloadUrl())
+                            .fileType(file.getFileType())
+                            .size(file.getData().length)
+                                    .build())
+                                                    .collect(Collectors.toList());
+
+    }
+
+    @PutMapping("copy/{id}")
+    public ResponseEntity<?> duplicateFile(@PathVariable(name = "id") String id, @RequestParam(name = "name") String newName) {
+
+        Optional<DatabaseFile> optionalFile = fileRepository.findById(Long.valueOf(id));
+        if (optionalFile.isEmpty()) {
+            return ResponseEntity.badRequest()
+                                 .body(new IllegalStateException("File to copy not found"));
+        }
+
+        DatabaseFile file = optionalFile.get();
+        try {
+            DatabaseFile dbFile = DatabaseFile.builder()
+                    .fileName(newName)
+                    .fileType(file.getFileType())
+                    .data(file.getData())
+                    .build();
+
+            final DatabaseFile savedFile = fileRepository.save(dbFile);
+
+            savedFile.setDownloadUrl(ServletUriComponentsBuilder.fromCurrentContextPath()
+                                                                .path("/images/")
+                                                                .path(String.valueOf(savedFile.getId()))
+                                                                .toUriString());
+
+            return ResponseEntity.ok()
+                    .body(FileResponse.builder()
+                            .fileName(newName)
+                            .fileDownloadUri(savedFile.getDownloadUrl())
+                            .fileType(file.getFileType())
+                            .size(file.getData().length)
+                            .build());
+
+        } catch (Exception e) {
+            return ResponseEntity.badRequest()
+                    .body(new IllegalStateException("Could not create copy: " + e.getMessage()));
+        }
     }
 }
