@@ -29,4 +29,14 @@ public class GreetingController {
         model.addAttribute("subjects", subjects);
         return "subjects";
     }
+
+
+    @GetMapping("/practice")
+    public String practice(Model model) {
+        model.addAttribute("string1", "String value");
+        model.addAttribute("tip", "This is a tip.");
+        model.addAttribute("catName", "Mango");
+        model.addAttribute("stadiumVenue", "Edison");
+        return "practice";
+    }
 }
