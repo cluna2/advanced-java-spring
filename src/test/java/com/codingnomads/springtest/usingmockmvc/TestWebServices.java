@@ -3,6 +3,7 @@ package com.codingnomads.springtest.usingmockmvc;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -48,5 +49,35 @@ public class TestWebServices {
                 .andDo(print())
                 // the view name expected is greeting
                 .andExpect(view().name("greeting"));
+    }
+
+    @Test
+    public void testURLShouldReturnGreetingViewName() throws Exception {
+        mockMvc
+                .perform(get("/test1"))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("attribute1", "someValue"))
+                .andExpect(view().name("greeting"));
+    }
+
+    @Test
+    public void confirmRedirectToGoogle() throws Exception {
+        mockMvc
+                .perform(get("/google"))
+                .andDo(print())
+                .andExpect(status().isFound())
+                .andExpect(redirectedUrl("http://google.com"))
+                .andExpect(header().string("Location", "http://google.com"));
+
+    }
+
+    @Test
+    public void testRequestBodyReturned() throws Exception {
+        mockMvc
+                .perform(post("/non-empty")
+                        .content("This is a request body"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string("This is a request body"));
     }
 }
