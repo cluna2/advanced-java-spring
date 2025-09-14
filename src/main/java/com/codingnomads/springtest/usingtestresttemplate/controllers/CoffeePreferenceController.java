@@ -6,9 +6,7 @@ import com.codingnomads.springtest.usingtestresttemplate.services.CoffeePreferen
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/coffee")
@@ -24,6 +22,16 @@ public class CoffeePreferenceController {
             return ResponseEntity.ok()
                     .header("Location", "http://www.url.com/new/location")
                     .body(preference);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(new Exception(e.getMessage()));
+        }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getCoffeePreference(@PathVariable("id") Long id) {
+        try {
+            CoffeePreference pref = service.getCoffeePreference(id);
+            return ResponseEntity.ok(pref);
         } catch (Exception e) {
             return ResponseEntity.status(500).body(new Exception(e.getMessage()));
         }
