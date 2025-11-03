@@ -5,5 +5,6 @@ public enum AuthorityEnum {
     ROLE_USER,
     ROLE_ADMIN,
     ROLE_SUPERU,
-    UPDATER
+    UPDATER,
+    ROLE_MAINTAINER
 }

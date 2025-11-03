@@ -36,6 +36,12 @@ public class SecurityConfig {
                         // only allow users with an UPDATER authority to update users.
                         .requestMatchers("/update-user")
                         .hasAuthority("UPDATER")
+                        // only allow basic users to access this page
+                        .requestMatchers("/basicu")
+                        .hasRole("USER")
+                        // maintainers can only view this page
+                        .requestMatchers("/maintu")
+                        .hasRole("MAINTAINER")
                         // make sure that all others requests require authentication.
                         .anyRequest()
                         .authenticated())

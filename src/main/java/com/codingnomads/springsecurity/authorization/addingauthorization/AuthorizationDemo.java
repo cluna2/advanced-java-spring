@@ -42,9 +42,11 @@ public class AuthorizationDemo implements CommandLineRunner {
                 Authority.builder().authority(AuthorityEnum.ROLE_SUPERU).build();
         Authority updaterAuth =
                 Authority.builder().authority(AuthorityEnum.UPDATER).build();
+        Authority maintainerAuth =
+                Authority.builder().authority(AuthorityEnum.ROLE_MAINTAINER).build();
 
         if (authorityRepo.findAll().isEmpty()) {
-            authorityRepo.saveAll(Arrays.asList(userAuth, adminAuth, superUAuth, updaterAuth));
+            authorityRepo.saveAll(Arrays.asList(userAuth, adminAuth, superUAuth, updaterAuth, maintainerAuth));
         }
 
         UserMeta superUser = UserMeta.builder()
@@ -57,6 +59,8 @@ public class AuthorizationDemo implements CommandLineRunner {
                 .name("basic user")
                 .email("basicuser@email.com")
                 .build();
+        UserMeta maintainer =
+                UserMeta.builder().name("maintainer").email("maintainer@email.com").build();
 
         if (userPrincipalRepo.findAll().isEmpty()) {
             userPrincipalRepo.saveAll(Arrays.asList(
@@ -68,7 +72,10 @@ public class AuthorizationDemo implements CommandLineRunner {
                     new UserPrincipal(
                             "USER", passwordEncoder.encode("user"), Collections.singletonList(userAuth), basicUser),
                     new UserPrincipal(
-                            "ADMIN", passwordEncoder.encode("admin"), Arrays.asList(adminAuth, userAuth), admin)));
+                            "ADMIN", passwordEncoder.encode("admin"), Arrays.asList(adminAuth, userAuth), admin),
+                    new UserPrincipal(
+                            "MAINTAINER", passwordEncoder.encode("maintainer"), Collections.singletonList(maintainerAuth), maintainer)
+                    ));
         }
     }
 }

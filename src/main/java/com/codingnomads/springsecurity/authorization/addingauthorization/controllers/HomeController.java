@@ -37,6 +37,12 @@ public class HomeController {
         return "authorization/home";
     }
 
+    @GetMapping("/basicu")
+    public String basicUserPage() { return "authorization/basicu";}
+
+    @GetMapping("/maintu")
+    public String maintainerPage() { return "authorization/maintu";}
+
     /*
        Method Security Annotations
 
